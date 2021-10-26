@@ -1,4 +1,11 @@
 {
+  "name": "backend",
+  "version": "1.0.0",
+  "description": "Proyect TSCI 1",
+  "main": "app.js",
+  "scripts": {
+    "start": "nodemon api/app.js"
+  },
   "dependencies": {
     "bcryptjs": "^2.4.3",
     "body-parser": "^1.19.0",
