@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // define association here
-      Merma.belongsTo(models.Producto);
+      Merma.belongsTo(models.Producto, {foreignKey: "id_producto"});
     }
   };
   Merma.init({
