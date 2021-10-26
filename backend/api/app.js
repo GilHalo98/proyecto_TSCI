@@ -21,6 +21,9 @@ app.use(cors({origin: "*"}));
 require("./routes/TipoProductoRoute")(app);
 require("./routes/ProveedoresRoute")(app);
 require("./routes/ProductoRoute")(app);
+require("./routes/EntradaRoute")(app);
+require("./routes/SalidaRoute")(app);
+require("./routes/MermaRoute")(app);
 
 // Respuesta del servidor.
 app.listen(PORT, (error) => {
