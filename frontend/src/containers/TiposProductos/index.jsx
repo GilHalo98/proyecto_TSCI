@@ -52,6 +52,7 @@ const ListaTiposProductos = ({ dir }) => {
               <Col xs="auto">
                 <PrettyModal
                   btn={<ViewGridPlusOutlineIcon style={{ width: '100%', height: '100%' }} />}
+                  className="icon"
                   dir={dir}
                   color="success"
                   outline

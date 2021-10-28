@@ -52,6 +52,7 @@ const ListaProveedores = ({ dir }) => {
               <Col xs="auto">
                 <PrettyModal
                   btn={<StorePlusIcon style={{ width: '100%', height: '100%' }} />}
+                  className="icon"
                   dir={dir}
                   color="success"
                   outline

@@ -64,6 +64,7 @@ const ListaProductos = ({ dir }) => {
               <Col xs="auto">
                 <PrettyModal
                   btn={<ClipboardPlusOutlineIcon style={{ width: '100%', height: '100%' }} />}
+                  className="icon"
                   dir={dir}
                   color="success"
                   outline
