@@ -4,11 +4,53 @@ const Proveedor = db.Proveedor;
 // Retorna los tipos de productos.
 exports.getProveedor = async(request, respuesta) => {
   // GET request.
+  const parametros = request.query;
+
+  var atributos;
+  var busqueda;
+  var offset;
+  var limite;
+  var totalPaginas;
+
+  if (parametros.busqueda) {
+    busqueda = JSON.parse(parametros.busqueda);
+  } else {
+    busqueda = {};
+  }
+
+  if (parametros.atributos) {
+      atributos = parametros.atributos;
+  } else {
+      atributos = Object.keys(Proveedor.rawAttributes);
+  }
+
+  const totalProveedores = await Proveedor.count({
+    where: busqueda,
+  });
+
+  if (!parametros.limit && !parametros.pagina) {
+    limite = totalProveedores;
+    offset = 0;
+    totalPaginas = 1;
+  } else {
+    totalPaginas = Math.ceil(totalProveedores / parseInt(parametros.limit));
+    limite = parseInt(parametros.limit);
+    offset = (parseInt(parametros.pagina) * limite) - limite;
+  }
+
   try {
-    const proveedores = await Proveedor.findAll();
+    const proveedores = await Proveedor.findAll({
+        attributes: atributos,
+        where: busqueda,
+        offset: offset,
+        limit: limite,
+    });
 
     // Se conecto a la db, retorna los tipos de productos.
-    return respuesta.status(200).json(proveedores);
+    return respuesta.status(200).json({
+        paginas_totales: totalPaginas,
+        datos: proveedores
+    });
 
   } catch(excepcion) {
 

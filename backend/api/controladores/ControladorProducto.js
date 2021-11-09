@@ -2,22 +2,65 @@ const db = require("../models/index");
 const TipoProducto = db.Tipo_Producto;
 const Proveedor = db.Proveedor;
 const Producto = db.Producto;
+const Reporte = db.Reporte;
 
 
 // Retorna los productos.
 exports.getProducto = async(request, respuesta) => {
-  // GET request.
-  try {
-    const producto = await Producto.findAll();
+    // GET request.
+    const parametros = request.query;
 
-    // Se conecto a la db, retorna los producto
-    return respuesta.status(200).json(producto);
+    var atributos;
+    var busqueda;
+    var offset;
+    var limite;
+    var totalPaginas;
 
-  } catch(excepcion) {
+    if (parametros.busqueda) {
+      busqueda = JSON.parse(parametros.busqueda);
+    } else {
+      busqueda = {};
+    }
 
-    // No se conecto a la db.
-    return respuesta.status(500).send({message: `${excepcion}`});
-  }
+    if (parametros.atributos) {
+        atributos = parametros.atributos;
+    } else {
+        atributos = Object.keys(Producto.rawAttributes);
+    }
+
+    const totalProductos = await Producto.count({
+      where: busqueda,
+    });
+
+    if (!parametros.limit && !parametros.pagina) {
+      limite = totalProductos;
+      offset = 0;
+      totalPaginas = 1;
+    } else {
+      totalPaginas = Math.ceil(totalProductos / parseInt(parametros.limit));
+      limite = parseInt(parametros.limit);
+      offset = (parseInt(parametros.pagina) * limite) - limite;
+    }
+
+    try {
+      const productos = await Producto.findAll({
+          attributes: atributos,
+          where: busqueda,
+          offset: offset,
+          limit: limite,
+      });
+
+      // Se conecto a la db, retorna los tipos de productos.
+      return respuesta.status(200).json({
+          paginas_totales: totalPaginas,
+          datos: productos
+      });
+
+    } catch(excepcion) {
+
+      // No se conecto a la db.
+      return respuesta.status(500).send({message: `${excepcion}`});
+    }
 };
 
 // Agrega un producto a la db.
@@ -106,6 +149,20 @@ exports.deleteProducto = async(request, respuesta) => {
   if (!producto) {
     return respuesta.status(404).send({
       message: `El producto con id ${id} no existe`,
+    });
+  }
+
+  // Verificamos si no hay reportes asignados al productos.
+  const reporte = await Reporte.findOne({
+      where: {
+          id_producto: id,
+      },
+  });
+
+  // Si no existe, se manda una alerta.
+  if (reporte) {
+    return respuesta.status(409).send({
+      message: `El producto con id ${id} tiene reportes anexados`,
     });
   }
 

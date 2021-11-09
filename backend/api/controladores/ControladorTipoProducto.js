@@ -3,18 +3,59 @@ const TipoProducto = db.Tipo_Producto;
 
 // Retorna los tipos de productos.
 exports.getTipoProductos = async(request, respuesta) => {
-  // GET request.
-  try {
-    const tipos = await TipoProducto.findAll();
+    // GET request.
+    const parametros = request.query;
 
-    // Se conecto a la db, retorna los tipos de productos.
-    return respuesta.status(200).json(tipos);
+    var busqueda;
+    var atributos;
+    var offset;
+    var limite;
+    var totalPaginas;
 
-  } catch(excepcion) {
+    if (parametros.busqueda) {
+        busqueda = JSON.parse(parametros.busqueda);
+    } else {
+        busqueda = {};
+    }
 
-    // No se conecto a la db.
-    return respuesta.status(500).send({message: `${excepcion}`});
-  }
+    if (parametros.atributos) {
+        atributos = parametros.atributos;
+    } else {
+        atributos = Object.keys(TipoProducto.rawAttributes);
+    }
+
+    const totalTipos = await TipoProducto.count({
+        where: busqueda,
+    });
+
+    if (!parametros.limit && !parametros.pagina) {
+        limite = totalTipos;
+        offset = 0;
+        totalPaginas = 1;
+    } else {
+        totalPaginas = Math.ceil(totalTipos / parseInt(parametros.limit));
+        limite = parseInt(parametros.limit);
+        offset = (parseInt(parametros.pagina) * limite) - limite;
+    }
+
+    try {
+        const tipos = await TipoProducto.findAll({
+            attributes: atributos,
+            where: busqueda,
+            offset: offset,
+            limit: limite,
+        });
+
+        // Se conecto a la db, retorna los tipos de productos.
+        return respuesta.status(200).json({
+            paginas_totales: totalPaginas,
+            datos: tipos
+        });
+
+    } catch(excepcion) {
+        // No se conecto a la db.
+        return respuesta.status(500).send({message: `${excepcion}`});
+    }
 };
 
 
@@ -40,7 +81,7 @@ exports.addTipoProducto = async(request, respuesta) => {
   // Si el tipo de producto ya esta registrado, manda una alerta.
   if(tipo) {
     return respuesta.status(409).json({
-      message: `El tipo de producto ${tipo} ya existe`
+      message: `El tipo de producto ${tipo.tipo} ya existe`
     });
   }
 
