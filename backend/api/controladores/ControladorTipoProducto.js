@@ -1,5 +1,6 @@
 const db = require("../models/index");
 const TipoProducto = db.Tipo_Producto;
+const Producto = db.Producto;
 
 // Retorna los tipos de productos.
 exports.getTipoProductos = async(request, respuesta) => {
@@ -120,6 +121,20 @@ exports.deleteTipoProducto = async(request, respuesta) => {
   if (!tipo) {
     return respuesta.status(404).send({
       message: `El tipo de producto con id ${id} no existe`,
+    });
+  }
+
+  // Verificamos si no hay reportes asignados al productos.
+  const producto = await Producto.findOne({
+      where: {
+          id_proveedor: id,
+      },
+  });
+
+  // Si no existe, se manda una alerta.
+  if (producto) {
+    return respuesta.status(409).send({
+      message: `El Tipo de Producto con id ${id} tiene productos anexados`,
     });
   }
 
