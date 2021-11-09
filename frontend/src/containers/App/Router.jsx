@@ -15,12 +15,14 @@ import LogIn from '../LogIn/index';
 import Productos from '../Productos';
 import Proveedores from '../Proveedores';
 import TiposProductos from '../TiposProductos';
+import Reportes from '../Reportes';
 
 const Pages = () => (
   <Switch>
     <Route path="/menu/productos" component={Productos} />
     <Route path="/menu/proveedores" component={Proveedores} />
     <Route path="/menu/tiposProductos" component={TiposProductos} />
+    <Route path="/menu/Reportes" component={Reportes} />
   </Switch>
 );
 
