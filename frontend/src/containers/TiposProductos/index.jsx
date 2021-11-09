@@ -6,6 +6,7 @@ import PropTypes from 'prop-types';
 
 // Para realizar llamadas a la API
 import axios from "axios";
+import Swal from "sweetalert2";
 
 // Componentes de reactstrap.
 import {
@@ -22,22 +23,90 @@ import TablaDatos from './components/TablaDatos';
 // import { useTranslation } from 'react-i18next';
 
 // Componente PrettyButton.
-import PrettyModal from '../../shared/components/extendedButtons/PrettyModal';
-
-import FormTipos from './components/FormTipos';
+import PrettyButtonModal from './components/PrettyButtonModal';
+import FormTipo from './components/FormTipo';
+import Paginacion from './components/Paginacion';
 
 const ListaTiposProductos = ({ dir }) => {
   const [listaTipos, setListaTipos] = React.useState([]);
 
+  const [paginaTipos, setPaginaTipos] = React.useState(1);
+  // const [limiteTipos, setLimiteTipos] = React.useState(10);
+  const [totalPaginas, setTotalPaginas] = React.useState(0);
+
   React.useEffect(() => {
     const fetchData = async () => {
-      const proveedoresResult = await axios(
-        "http://localhost:3001/api/tiposProductos/"
-      );
-      setListaTipos(proveedoresResult.data);
+      const tiposProductosResult = await axios({
+          method: 'get',
+          url: 'http://localhost:3001/api/tiposProductos/',
+          params: {
+              // limit: limiteTipos,
+              limit: 10,
+              pagina: paginaTipos,
+          },
+      });
+      setListaTipos(tiposProductosResult.data.datos);
+      setTotalPaginas(tiposProductosResult.data.paginas_totales);
     };
     fetchData();
-  }, []);
+  }, [paginaTipos]);
+
+  const siguientePagina = () => {
+      if (paginaTipos < totalPaginas) {
+          setPaginaTipos(paginaTipos + 1);
+      }
+  };
+
+  const anteriorPagina = () => {
+      if (paginaTipos > 1) {
+          setPaginaTipos(paginaTipos - 1);
+      } else {
+          setPaginaTipos(1);
+      }
+  };
+
+  const primeraPagina = () => {
+      setPaginaTipos(1);
+  };
+
+  const ultimaPagina = () => {
+      setPaginaTipos(totalPaginas);
+  };
+
+  const handleSubmit = (event) => {
+    const data = {
+      tipo: event.target[1].value,
+      descripcion: event.target[2].value,
+    };
+
+    const apiRequest = axios.create({
+      baseURL: 'http://localhost:3001/api',
+    });
+
+    event.preventDefault();
+
+    apiRequest.post(
+      `/tiposProductos/add/`,
+      data
+    ).then((respuesta) => {
+      Swal.fire({
+        title: "Tipo de producto Agregado!",
+        text: respuesta.data.message,
+        icon: "success",
+        confirmButtonText: "Ok!",
+      }).then(function() {
+        window.location.reload();
+      });
+
+    }).catch((error) => {
+      Swal.fire({
+        title: "Error!",
+        text: error.response.data.message,
+        icon: "error",
+        confirmButtonText: "Intenta Nuevamente",
+      });
+    });
+  };
 
   return (
     <Container className="dashboard">
@@ -50,21 +119,18 @@ const ListaTiposProductos = ({ dir }) => {
               </Col>
 
               <Col xs="auto">
-                <PrettyModal
-                  btn={<ViewGridPlusOutlineIcon style={{ width: '100%', height: '100%' }} />}
-                  className="icon"
-                  dir={dir}
-                  color="success"
-                  outline
-                  idButton="agregar_nuevo_tipo"
-                  tooltip
-                  tooltipLabel="Agregar un Tipo de producto"
-                  tooltipPlacement="right"
-                  titulo="Agrega un Tipo de producto"
-                  botonesOk={false}
-                >
-                  <FormTipos />
-                </PrettyModal>
+                  <PrettyButtonModal
+                    titulo="Agregar un Tipo de Producto"
+                    handleSubmit={handleSubmit}
+                    icono={<ViewGridPlusOutlineIcon style={{ width: '100%', height: '100%' }} />}
+                    color="success"
+                    outline
+                    tooltip
+                    tooltipLabel="Agregar un Tipo de Producto"
+                    tooltipPlacement="right"
+                  >
+                      <FormTipo />
+                  </PrettyButtonModal>
               </Col>
             </Row>
           </Container>
@@ -76,6 +142,15 @@ const ListaTiposProductos = ({ dir }) => {
           tiposProductos={listaTipos}
         />
       </Row>
+
+      <Paginacion
+        paginaActual={paginaTipos}
+        totalPaginas={totalPaginas}
+        primeraPagina={primeraPagina}
+        anteriorPagina={anteriorPagina}
+        ultimaPagina={ultimaPagina}
+        siguientePagina={siguientePagina}
+      />
     </Container>
   );
 };
