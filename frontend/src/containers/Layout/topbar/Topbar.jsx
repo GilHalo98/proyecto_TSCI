@@ -12,7 +12,6 @@ const Topbar = ({ changeMobileSidebarVisibility, changeSidebarVisibility }) => (
           changeMobileSidebarVisibility={changeMobileSidebarVisibility}
           changeSidebarVisibility={changeSidebarVisibility}
         />
-        <Link className="topbar__logo" to="/menu/productos" />
       </div>
       <div className="topbar__right">
         <TopbarProfile />

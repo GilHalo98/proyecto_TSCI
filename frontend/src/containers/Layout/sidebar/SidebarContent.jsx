@@ -13,9 +13,10 @@ const SidebarContent = ({
   return (
     <div className="sidebar__content">
       <ul className="sidebar__block">
-        <SidebarLink title="Productos" route="/menu/productos" onClick={handleHideSidebar} />
-        <SidebarLink title="Proveedores" route="/menu/proveedores" onClick={handleHideSidebar} />
-        <SidebarLink title="Tipos de Productos" route="/menu/tiposProductos" onClick={handleHideSidebar} />
+        <SidebarLink title="Reportes de productos" route="/menu/reportes" icon="file-empty" onClick={handleHideSidebar} />
+        <SidebarLink title="Productos" route="/menu/productos" icon="database" onClick={handleHideSidebar} />
+        <SidebarLink title="Proveedores" route="/menu/proveedores" icon="store" onClick={handleHideSidebar} />
+        <SidebarLink title="Tipos de Productos" route="/menu/tiposProductos" icon="tag" onClick={handleHideSidebar} />
       </ul>
 
       <ul className="sidebar__block">
