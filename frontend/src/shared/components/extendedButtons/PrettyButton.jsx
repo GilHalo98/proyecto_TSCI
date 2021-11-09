@@ -36,7 +36,13 @@ const PrettyButton = ({
   return (
     <Col xs={xs} sm={sm} md={md} lg={lg} xl={xl}>
       <Button
+        style={{
+            'background': 'transparent',
+            'border': 'none',
+            'padding': 0,
+        }}
         id={idButton}
+        size="sm"
         color={color}
         className={className}
         outline={outline}
@@ -54,7 +60,7 @@ export default PrettyButton;
 
 PrettyButton.propTypes = {
   children: PropTypes.element.isRequired,
-  dir: PropTypes.string.isRequired,
+  dir: PropTypes.string,
   color: PropTypes.string,
   className: PropTypes.string,
   idButton: PropTypes.string,
@@ -71,6 +77,7 @@ PrettyButton.propTypes = {
 };
 
 PrettyButton.defaultProps = {
+  dir: '',
   color: '',
   className: '',
   idButton: 'prettyButton',
