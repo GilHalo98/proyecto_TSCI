@@ -9,66 +9,88 @@ import {
   Col, Container, Row,
 } from 'reactstrap';
 
+// Para realizar llamadas a la API
+import axios from "axios";
+
+// Colores aleatorios.
+import randomColor from "randomcolor";
+
 // Conexion con react-redux
 import { connect } from 'react-redux';
 
 // Propiedades RtL
 import { RTLProps } from '../../../shared/prop-types/ReducerProps';
 
-// Iconos.
-
 // Componentes de la vista.
-import InforCard from '../components/InforCard';
 import GraficoBarraLadeado from '../components/GraficoBarraLadeado';
 import GraficoPie from '../components/GraficoPie';
-// import GraficoBarra from '../components/GraficoBarra';
+import SeccionReportes from './components/SeccionReportes';
 
-// Datos del prototipo.
-// import { datos, datos2, datos3 } from './components/prototypeData';
+// Logica de la vista.
+import {
+    querryConteoReportes, querryProductosCantidad, querryProductosProveedor
+ } from './logic/FuncionesIndex';
 
-const Informes = ({ rtl }) => (
-  <Container className="dashboard">
-    <Row>
-      <Col md={12}>
-        <h3 className="page-title">Informes. {rtl.direction}</h3>
-      </Col>
-    </Row>
+const Informes = ({ rtl }) => {
+  const [totalMerma, setTotalMerma] = React.useState(0);
+  const [totalEntrada, setTotalEntrada] = React.useState(0);
+  const [totalSalida, setTotalSalida] = React.useState(0);
 
-    <Row>
-      <Container>
+  const [listaProductos, setListaProductos] = React.useState([]);
+  const [dataPai, setDataPai] = React.useState();
+
+  React.useEffect(() => {
+      querryConteoReportes(setTotalMerma, setTotalEntrada, setTotalSalida);
+      querryProductosCantidad(setListaProductos);
+      querryProductosProveedor(setDataPai);
+  }, []);
+
+  return (
+    <Container className="dashboard">
         <Row>
-          <InforCard
-            xl={3}
-            title="Usuarios Totales"
-            value={1000}
-          />
-
-          <InforCard
-            xl={3}
-            title="Sesiones Activas"
-            value={360}
-          />
-
-          <InforCard
-            xl={3}
-            title="Reservas Totales"
-            value={20}
-          />
-
-          <InforCard
-            xl={3}
-            title="Reservas de eventos"
-            value={5}
-          />
+          <Col md={12}>
+            <h3 className="page-title">Informes.</h3>
+          </Col>
         </Row>
+
         <Row>
-          <GraficoBarraLadeado title="Consumo de monedas por usuario" />
-          <GraficoPie title="Principales Ubicaciones de usuarios" />
+          <Container>
+            <SeccionReportes
+                totalMerma={totalMerma}
+                totalEntrada={totalEntrada}
+                totalSalida={totalSalida}
+            />
+
+            <Row>
+              <Col md={2} lg={2} xl={2} />
+              <GraficoBarraLadeado
+                title="Productos en almacén"
+                data={listaProductos}
+                keyDataYAxis={'numero_serie'}
+                keyDataBar={'cantidad_stock'}
+                md={8}
+                lg={8}
+                xl={8}
+              />
+              <Col md={2} lg={2} xl={2} />
+            </Row>
+
+            <Row>
+              <Col md={2} lg={2} xl={2} />
+              <GraficoPie
+                title="Cantidad de productos por proveedor"
+                data={dataPai}
+                md={8}
+                lg={8}
+                xl={8}
+              />
+              <Col md={2} lg={2} xl={2} />
+            </Row>
+          </Container>
         </Row>
-      </Container>
-    </Row>
-  </Container>
-);
+    </Container>
+  );
+};
 
 Informes.propTypes = {
   rtl: RTLProps.isRequired,

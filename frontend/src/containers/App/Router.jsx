@@ -17,7 +17,10 @@ import Proveedores from '../Proveedores';
 import TiposProductos from '../TiposProductos';
 import Reportes from '../Reportes';
 
-const Pages = () => (
+import Historicos from '../Dashboard/Historicos/index';
+import Informes from '../Dashboard/Informes/index';
+
+const Menu = () => (
   <Switch>
     <Route path="/menu/productos" component={Productos} />
     <Route path="/menu/proveedores" component={Proveedores} />
@@ -26,11 +29,19 @@ const Pages = () => (
   </Switch>
 );
 
+const Dashboard = () => (
+    <Switch>
+        <Route path="/dashboard/historicos" component={Historicos} />
+        <Route path="/dashboard/informes" component={Informes} />
+    </Switch>
+);
+
 const wrappedRoutes = () => (
   <div>
     <Layout />
     <div className="container__wrap">
-      <Route path="/menu" component={Pages} />
+      <Route path="/menu" component={Menu} />
+      <Route path="/dashboard" component={Dashboard} />
     </div>
   </div>
 );

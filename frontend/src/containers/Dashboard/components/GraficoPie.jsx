@@ -9,44 +9,19 @@ import PropTypes from 'prop-types';
 import { Card, CardBody, Col } from 'reactstrap';
 import { Pie } from 'react-chartjs-2';
 
-const data = {
-  labels: [
-    'Red',
-    'Blue',
-    'Yellow',
-  ],
-  datasets: [{
-    data: [300, 50, 100],
-    backgroundColor: [
-      '#FF6384',
-      '#36A2EB',
-      '#FFCE56',
-    ],
-    hoverBackgroundColor: [
-      '#FF6384',
-      '#36A2EB',
-      '#FFCE56',
-    ],
-    borderColor: 'rgba(255,255,255,0.54)',
-  }],
-};
-
-const legendOpts = {
-  onClick: (e, item) => alert(`Item with text ${item.text} and index ${item.index} clicked`),
-};
-
 const GraficoPie = ({
   title,
-  md, lg, xl,
+  data,
+  xs, sm, md, lg, xl,
 }) => (
-  <Col md={md} lg={lg} xl={xl}>
+  <Col md={md} lg={lg} xl={xl} sm={sm} xs={xs}>
     <Card>
       <CardBody>
         <div className="card__title">
           <h5 className="bold-text">{title}</h5>
         </div>
 
-        <Pie data={data} legend={legendOpts} />
+        <Pie data={data}/>
       </CardBody>
     </Card>
   </Col>
@@ -54,6 +29,9 @@ const GraficoPie = ({
 
 GraficoPie.propTypes = {
   title: PropTypes.string,
+  data: PropTypes.shape().isRequired,
+  xs: PropTypes.number,
+  sm: PropTypes.number,
   md: PropTypes.number,
   lg: PropTypes.number,
   xl: PropTypes.number,
@@ -61,9 +39,11 @@ GraficoPie.propTypes = {
 
 GraficoPie.defaultProps = {
   title: '',
+  xs: 12,
+  sm: 12,
   md: 12,
   lg: 12,
-  xl: 6,
+  xl: 12,
 };
 
 export default GraficoPie;

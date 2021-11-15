@@ -25,77 +25,13 @@ import ButtonModal from './ButtonModal';
 import FormProveedor from './FormProveedor';
 import FormDeleteProveedor from './FormDeleteProveedor';
 
+// Logica del componente.
+import { actualizar, eliminar } from '../logic/FuncionesRegistros';
+
 const TablaDatos = ({
   dir, proveedores,
   xs, sm, md, lg, xl,
 }) => {
-    const handleUpdate = (event) => {
-      const data = {
-          nombre: event.target[1].value,
-          locacion: event.target[2].value,
-          pagina_web: event.target[3].value,
-          numero_telefonico: event.target[4].value,
-          correo_electronico: event.target[5].value,
-      };
-
-      const apiRequest = axios.create({
-        baseURL: 'http://localhost:3001/api',
-      });
-
-      event.preventDefault();
-
-      apiRequest.put(
-        `/proveedores/update/${event.target[0].value}`,
-        data
-      ).then((respuesta) => {
-        Swal.fire({
-          title: "Proveedor Registrado!",
-          text: respuesta.data.message,
-          icon: "success",
-          confirmButtonText: "Ok!",
-        }).then(function() {
-          window.location.reload();
-        });
-
-      }).catch((error) => {
-        Swal.fire({
-          title: "Error!",
-          text: error.response.data.message,
-          icon: "error",
-          confirmButtonText: "Intenta Nuevamente",
-        });
-      });
-    };
-
-    const handleRemove = (event) => {
-      const apiRequest = axios.create({
-        baseURL: 'http://localhost:3001/api',
-      });
-
-      event.preventDefault();
-
-      apiRequest.delete(
-        `/proveedores/del/${event.target[0].value}`,
-      ).then((respuesta) => {
-        Swal.fire({
-          title: "Proveedor Eliminado!",
-          text: respuesta.data.message,
-          icon: "success",
-          confirmButtonText: "Ok!",
-        }).then(function() {
-          window.location.reload();
-        });
-
-      }).catch((error) => {
-        Swal.fire({
-          title: "Error!",
-          text: error.response.data.message,
-          icon: "error",
-          confirmButtonText: "Intenta Nuevamente",
-        });
-      });
-    };
-
     return (
       <Col xs={xs} sm={sm} md={md} lg={lg} xl={xl}>
         <Card>
@@ -132,7 +68,7 @@ const TablaDatos = ({
                         <ButtonGroup className="btn-group--icons" style={{ 'padding': 0 }}>
                             <ButtonModal
                               titulo={`modifica los datos de ${proveedor.nombre}`}
-                              handleSubmit={handleUpdate}
+                              handleSubmit={actualizar}
                               icono={<PencilOutlineIcon />}
                               color="warning"
                             >
@@ -148,7 +84,7 @@ const TablaDatos = ({
 
                           <ButtonModal
                             titulo={`Eliminar los datos de ${proveedor.nombre}`}
-                            handleSubmit={handleRemove}
+                            handleSubmit={eliminar}
                             colored
                             icono={<TrashCanOutlineIcon />}
                             color="danger"

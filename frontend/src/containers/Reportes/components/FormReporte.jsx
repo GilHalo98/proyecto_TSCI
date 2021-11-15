@@ -20,11 +20,20 @@ import ComponenteField from './ComponenteField';
 // import { useTranslation } from 'react-i18next';
 
 const FormReporte = ({
+    idReporte,
     handleSubmit, productos,
     defaultDescripcion, defaultProducto, defaultTipo,
 }) => {
   return (
     <Col>
+        <Field
+            name="id"
+            defaultValue={idReporte}
+            component={ComponenteField}
+            label=""
+            type="hidden"
+        />
+
         <Field
             name="descripcion"
             defaultValue={defaultDescripcion}
@@ -75,6 +84,7 @@ const FormReporte = ({
 
 FormReporte.propTypes = {
     productos: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+    idReporte: PropTypes.number,
     defaultDescripcion: PropTypes.string,
     defaultProducto: PropTypes.number,
     defaultTipo: PropTypes.string,
@@ -82,6 +92,7 @@ FormReporte.propTypes = {
 
 FormReporte.defaultProps = {
   // Propiedades del componente.
+  idReporte: '',
   defaultDescripcion: '',
   defaultProducto: '',
   defaultTipo: '',

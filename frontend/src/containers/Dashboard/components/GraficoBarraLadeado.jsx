@@ -16,30 +16,13 @@ import {
 // import Panel from '@/shared/components/Panel';
 import getTooltipStyles from '../../../shared/helpers';
 
-const data = [
-  {
-    usuario: 'Usuario 1', dato: 4000,
-  },
-  {
-    usuario: 'Usuario 2', dato: 3000,
-  },
-  {
-    usuario: 'Usuario 3', dato: 2000,
-  },
-  {
-    usuario: 'Usuario 4', dato: 1900,
-  },
-  {
-    usuario: 'Usuario 5', dato: 1890,
-  },
-];
-
 const GraficoBarraLadeado = ({
   title,
   dir, themeName,
-  md, lg, xl,
+  data, keyDataBar, keyDataYAxis,
+  xs, sm, md, lg, xl,
 }) => (
-  <Col md={md} lg={lg} xl={xl}>
+  <Col md={md} lg={lg} xl={xl} sm={sm} xs={xs}>
     <Card>
       <CardBody>
         <div className="card__title">
@@ -66,13 +49,13 @@ const GraficoBarraLadeado = ({
 
               <YAxis
                 type="category"
-                dataKey="usuario"
+                dataKey={keyDataYAxis}
                 tickLine={false}
                 verticalAnchor="start"
                 orientation={dir === 'rtl' ? 'right' : 'left'}
               />
               <Tooltip {...getTooltipStyles(themeName, 'defaultItems')} />
-              <Bar dataKey="dato" fill="#48b5ff" barSize={12} />
+              <Bar dataKey={keyDataBar} fill="#48b5ff" barSize={12} />
             </BarChart>
           </ResponsiveContainer>
         </div>
@@ -84,7 +67,12 @@ const GraficoBarraLadeado = ({
 GraficoBarraLadeado.propTypes = {
   dir: PropTypes.string.isRequired,
   themeName: PropTypes.string.isRequired,
+  data: PropTypes.arrayOf(PropTypes.shape()).isRequired,
+  keyDataYAxis: PropTypes.string.isRequired,
+  keyDataBar: PropTypes.string.isRequired,
   title: PropTypes.string,
+  xs: PropTypes.number,
+  sm: PropTypes.number,
   md: PropTypes.number,
   lg: PropTypes.number,
   xl: PropTypes.number,
@@ -92,9 +80,11 @@ GraficoBarraLadeado.propTypes = {
 
 GraficoBarraLadeado.defaultProps = {
   title: '',
+  xs: 12,
+  sm: 12,
   md: 12,
   lg: 12,
-  xl: 6,
+  xl: 12,
 };
 
 export default connect((state) => ({ themeName: state.theme.className }))(GraficoBarraLadeado);

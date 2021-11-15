@@ -18,8 +18,13 @@ import TrashCanOutlineIcon from 'mdi-react/TrashCanOutlineIcon';
 import PencilOutlineIcon from 'mdi-react/PencilOutlineIcon';
 import MinusIcon from 'mdi-react/MinusIcon';
 
+// Componentes del componente.
 import ButtonModal from './ButtonModal';
 import FormReporte from './FormReporte';
+import FormDeleteReporte from './FormDeleteReporte';
+
+// Logica del componente.
+import { actualizar, eliminar } from '../logic/FuncionesRegistros';
 
 const Panel = ({
     datosReporte, productos,
@@ -27,79 +32,7 @@ const Panel = ({
     panelClass, children,
     md, lg, xl, sm, xs,
 }) => {
-  // const [visible, setVisible] = useState(true);
   const [collapse, setCollapse] = useState(true);
-
-  // Actualiza el reporte.
-  const handleUpdate = (event) => {
-      const data = {
-        descripcion: event.target[0].value,
-        id_producto: event.target[2].value,
-        tipo: event.target[3].value,
-      };
-
-      const apiRequest = axios.create({
-        baseURL: 'http://localhost:3001/api',
-      });
-
-      event.preventDefault();
-
-      apiRequest.put(
-        `/reportes/update/${datosReporte.id}`,
-        data
-      ).then((respuesta) => {
-        Swal.fire({
-          title: "Reporte Actualizado!",
-          text: respuesta.data.message,
-          icon: "success",
-          confirmButtonText: "Ok!",
-        }).then(function() {
-          window.location.reload();
-        });
-
-      }).catch((error) => {
-        Swal.fire({
-          title: "Error!",
-          text: error.response.data.message,
-          icon: "error",
-          confirmButtonText: "Intenta Nuevamente",
-        });
-      });
-  }
-
-  // Elimina el registro del reporte junto con su tipo asignado.
-  const handleRemove = (event) => {
-    const apiRequest = axios.create({
-      baseURL: 'http://localhost:3001/api',
-    });
-
-    event.preventDefault();
-
-    apiRequest.delete(
-      `/reportes/del/${datosReporte.id}`,
-    ).then((respuesta) => {
-      Swal.fire({
-        title: "Reporte Eliminado!",
-        text: respuesta.data.message,
-        icon: "success",
-        confirmButtonText: "Ok!",
-      }).then(function() {
-        window.location.reload();
-      });
-
-    }).catch((error) => {
-      Swal.fire({
-        title: "Error!",
-        text: error.response.data.message,
-        icon: "error",
-        confirmButtonText: "Intenta Nuevamente",
-      });
-    });
-  };
-
-  const toggleCollapse = () => {
-    setCollapse((prevState) => !prevState);
-  };
 
   if (true) {
     return (
@@ -114,18 +47,19 @@ const Panel = ({
                 className="panel__btn"
                 aria-label="panel__btn"
                 type="button"
-                onClick={toggleCollapse}
+                onClick={() => {setCollapse((prevState) => !prevState);}}
               >
                 <MinusIcon />
               </button>
 
               <ButtonModal
                 titulo="Modificar Reporte"
-                handleSubmit={handleUpdate}
+                handleSubmit={actualizar}
                 icono={<PencilOutlineIcon />}
                 color="warning"
               >
                 <FormReporte
+                    idReporte={datosReporte.id}
                     productos={productos}
                     defaultDescripcion={datosReporte.descripcion}
                     defaultTipo={datosReporte.tipo}
@@ -135,14 +69,14 @@ const Panel = ({
 
               <ButtonModal
                 titulo="¿Deseas eliminar el reporte?"
-                handleSubmit={handleRemove}
+                handleSubmit={eliminar}
                 colored
                 icono={<TrashCanOutlineIcon />}
                 color="danger"
               >
-                <p style={{ 'textAlign':'center' }}>
-                    Al eliminar este elemento no habra manera de recuperarlo
-                </p>
+                <FormDeleteReporte
+                    idReporte={datosReporte.id}
+                />
               </ButtonModal>
             </div>
 

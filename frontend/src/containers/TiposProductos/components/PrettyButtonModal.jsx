@@ -24,10 +24,6 @@ const ButtonModal = ({
   // Estado del Form.
   const [modal, setModal] = useState(false);
 
-  const handleCancel = () => {
-    setModal((prevState) => !prevState);
-  };
-
   const modalClass = classNames({
     'modal-dialog--colored': colored,
     'modal-dialog--header': header,
@@ -43,14 +39,14 @@ const ButtonModal = ({
           tooltip={tooltip}
           tooltipLabel={tooltipLabel}
           tooltipPlacement={tooltipPlacement}
-          funcion={handleCancel}
+          funcion={() => {setModal((prevState) => !prevState);}}
       >
           {icono}
       </PrettyButton>
 
       <Modal
         isOpen={modal}
-        handleCancel={handleCancel}
+        handleCancel={() => {setModal((prevState) => !prevState);}}
         modalClassName={`${rtl.direction}-support`}
         className={`modal-dialog--${color} ${modalClass}`}
       >
@@ -59,7 +55,7 @@ const ButtonModal = ({
             className="lnr lnr-cross modal__close-btn"
             aria-label="modal__close-btn"
             type="button"
-            onClick={handleCancel}
+            onClick={() => {setModal((prevState) => !prevState);}}
           />
           <h4 className="text-modal  modal__title">{titulo}</h4>
         </div>
@@ -70,7 +66,7 @@ const ButtonModal = ({
             </div>
 
             <ButtonToolbar className="modal__footer">
-                <Button className="modal_cancel" onClick={handleCancel}>
+                <Button className="modal_cancel" onClick={() => {setModal((prevState) => !prevState);}}>
                     Cancelar
                 </Button>
 

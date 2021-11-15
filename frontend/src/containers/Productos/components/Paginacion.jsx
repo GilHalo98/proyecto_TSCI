@@ -4,6 +4,14 @@ import React from 'react';
 // Parametros del componente.
 import PropTypes from 'prop-types';
 
+// Logica del componente.
+import {
+  siguientePagina,
+  paginaAnterior,
+  primeraPagina,
+  ultimaPagina,
+} from '../logic/FuncionesPaginacion';
+
 // Componentes de reactstrap.
 import {
     Row, Col,
@@ -11,19 +19,27 @@ import {
 } from 'reactstrap';
 
 const Paginacion = ({
-    paginaActual, totalPaginas,
-    primeraPagina, anteriorPagina,
-    ultimaPagina, siguientePagina,
+    paginaActual, setPaginaActual, totalPaginas,
 }) => (
     <Row>
         <Col>
             <Pagination>
                 <PaginationItem>
-                    <PaginationLink onClick={primeraPagina} first />
+                    <PaginationLink
+                        onClick={() => {
+                            primeraPagina(setPaginaActual);
+                        }}
+                        first
+                    />
                 </PaginationItem>
 
                 <PaginationItem>
-                    <PaginationLink onClick={anteriorPagina} previous />
+                    <PaginationLink
+                        onClick={() => {
+                            paginaAnterior(paginaActual, setPaginaActual);
+                        }}
+                        previous
+                    />
                 </PaginationItem>
 
                 <PaginationItem>
@@ -33,11 +49,21 @@ const Paginacion = ({
                 </PaginationItem>
 
                 <PaginationItem>
-                    <PaginationLink onClick={siguientePagina} next />
+                    <PaginationLink
+                        onClick={() => {
+                            siguientePagina(paginaActual, totalPaginas, setPaginaActual);
+                        }}
+                        next
+                    />
                 </PaginationItem>
 
                 <PaginationItem>
-                    <PaginationLink onClick={ultimaPagina} last />
+                    <PaginationLink
+                        onClick={() => {
+                            ultimaPagina(totalPaginas, setPaginaActual);
+                        }}
+                        last
+                    />
                 </PaginationItem>
             </Pagination>
         </Col>
@@ -46,12 +72,8 @@ const Paginacion = ({
 
 Paginacion.propTypes = {
   paginaActual: PropTypes.number.isRequired,
+  setPaginaActual: PropTypes.func.isRequired,
   totalPaginas: PropTypes.number.isRequired,
-
-  primeraPagina: PropTypes.func.isRequired,
-  anteriorPagina: PropTypes.func.isRequired,
-  siguientePagina: PropTypes.func.isRequired,
-  ultimaPagina: PropTypes.func.isRequired,
 };
 
 export default Paginacion;

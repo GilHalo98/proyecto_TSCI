@@ -8,10 +8,6 @@ import {
     Col, ButtonToolbar, ButtonGroup,
 } from 'reactstrap';
 
-// Para realizar llamadas a la API
-import axios from "axios";
-import Swal from "sweetalert2";
-
 // Iconos.
 import TrashCanOutlineIcon from 'mdi-react/TrashCanOutlineIcon';
 import PencilOutlineIcon from 'mdi-react/PencilOutlineIcon';
@@ -25,79 +21,13 @@ import ButtonModal from './ButtonModal';
 import FormProducto from './FormProducto';
 import FormDeleteProducto from './FormDeleteProducto';
 
+// Logica del componente.
+import { actualizar, eliminar } from '../logic/FuncionesRegistros';
+
 const TablaDatos = ({
   dir, productos, proveedores, tiposProductos,
   xs, sm, md, lg, xl,
 }) => {
-    const handleUpdate = (event) => {
-        const data = {
-          numero_serie: event.target[1].value,
-          costo: event.target[2].value,
-          medidas: event.target[3].value,
-          cantidad_stock: event.target[4].value,
-          id_proveedor: event.target[5].value,
-          id_tipo: event.target[6].value,
-        };
-
-        const apiRequest = axios.create({
-          baseURL: 'http://localhost:3001/api',
-        });
-
-        event.preventDefault();
-
-        apiRequest.put(
-          `/producto/update/${event.target[0].value}`,
-          data
-        ).then((respuesta) => {
-          Swal.fire({
-            title: "Producto Actualizado!",
-            text: respuesta.data.message,
-            icon: "success",
-            confirmButtonText: "Ok!",
-          }).then(function() {
-            window.location.reload();
-          });
-
-        }).catch((error) => {
-          Swal.fire({
-            title: "Error!",
-            text: error.response.data.message,
-            icon: "error",
-            confirmButtonText: "Intenta Nuevamente",
-          });
-        });
-    };
-
-    const handleRemove = (event) => {
-        const apiRequest = axios.create({
-          baseURL: 'http://localhost:3001/api',
-        });
-
-        event.preventDefault();
-
-        console.log(event.target[0].value);
-        apiRequest.delete(
-          `/producto/del/${event.target[0].value}`,
-        ).then((respuesta) => {
-          Swal.fire({
-            title: "Producto Eliminado!",
-            text: respuesta.data.message,
-            icon: "success",
-            confirmButtonText: "Ok!",
-          }).then(function() {
-            window.location.reload();
-          });
-
-        }).catch((error) => {
-          Swal.fire({
-            title: "Error!",
-            text: error.response.data.message,
-            icon: "error",
-            confirmButtonText: "Intenta Nuevamente",
-          });
-        });
-    };
-
     return (
       <Col xs={xs} sm={sm} md={md} lg={lg} xl={xl}>
         <Card>
@@ -150,7 +80,7 @@ const TablaDatos = ({
                           <ButtonGroup className="btn-group--icons" style={{ 'padding': 0 }}>
                               <ButtonModal
                                 titulo={`modifica los datos de ${producto.numero_serie}`}
-                                handleSubmit={handleUpdate}
+                                handleSubmit={actualizar}
                                 icono={<PencilOutlineIcon />}
                                 color="warning"
                               >
@@ -169,7 +99,7 @@ const TablaDatos = ({
 
                               <ButtonModal
                                 titulo={`Eliminar los datos de ${producto.numero_serie}`}
-                                handleSubmit={handleRemove}
+                                handleSubmit={eliminar}
                                 colored
                                 icono={<TrashCanOutlineIcon />}
                                 color="danger"

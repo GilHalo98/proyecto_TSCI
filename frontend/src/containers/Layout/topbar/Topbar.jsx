@@ -2,7 +2,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 // import { Link } from 'react-router-dom';
 import TopbarSidebarButton from './TopbarSidebarButton';
-import TopbarProfile from './TopbarProfile';
+// import TopbarProfile from './TopbarProfile';
 
 const Topbar = ({ changeMobileSidebarVisibility, changeSidebarVisibility }) => (
   <div className="topbar">
@@ -12,9 +12,6 @@ const Topbar = ({ changeMobileSidebarVisibility, changeSidebarVisibility }) => (
           changeMobileSidebarVisibility={changeMobileSidebarVisibility}
           changeSidebarVisibility={changeSidebarVisibility}
         />
-      </div>
-      <div className="topbar__right">
-        <TopbarProfile />
       </div>
     </div>
   </div>

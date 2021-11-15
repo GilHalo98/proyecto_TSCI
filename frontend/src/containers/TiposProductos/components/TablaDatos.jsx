@@ -27,75 +27,14 @@ import ButtonModal from './ButtonModal';
 import FormTipo from './FormTipo';
 import FormDeleteTipo from './FormDeleteTipo';
 
+// Logica del componente.
+import { actualizar, eliminar } from '../logic/FuncionesRegistros';
+
 const TablaDatos = ({
   dir,
   tiposProductos,
   xs, sm, md, lg, xl,
 }) => {
-    const handleUpdate = (event) => {
-      const data = {
-        tipo: event.target[1].value,
-        descripcion: event.target[2].value,
-      };
-
-      const apiRequest = axios.create({
-        baseURL: 'http://localhost:3001/api',
-      });
-
-      event.preventDefault();
-
-      apiRequest.put(
-        `/tiposProductos/update/${event.target[0].value}`,
-        data
-      ).then((respuesta) => {
-        Swal.fire({
-          title: "Tipo de producto Actualizado!",
-          text: respuesta.data.message,
-          icon: "success",
-          confirmButtonText: "Ok!",
-        }).then(function() {
-          window.location.reload();
-        });
-
-      }).catch((error) => {
-        Swal.fire({
-          title: "Error!",
-          text: error.response.data.message,
-          icon: "error",
-          confirmButtonText: "Intenta Nuevamente",
-        });
-      });
-    };
-
-    const handleRemove = (event) => {
-      const apiRequest = axios.create({
-        baseURL: 'http://localhost:3001/api',
-      });
-
-      event.preventDefault();
-
-      apiRequest.delete(
-        `/tiposProductos/del/${event.target[0].value}`
-      ).then((respuesta) => {
-        Swal.fire({
-          title: "Tipo de producto Eliminado!",
-          text: respuesta.data.message,
-          icon: "success",
-          confirmButtonText: "Ok!",
-        }).then(function() {
-          window.location.reload();
-        });
-
-      }).catch((error) => {
-        Swal.fire({
-          title: "Error!",
-          text: error.response.data.message,
-          icon: "error",
-          confirmButtonText: "Intenta Nuevamente",
-        });
-      });
-    };
-
     return (
       <Col xs={xs} sm={sm} md={md} lg={lg} xl={xl}>
         <Card>
@@ -126,7 +65,7 @@ const TablaDatos = ({
                           <ButtonGroup className="btn-group--icons" style={{ 'padding': 0 }}>
                               <ButtonModal
                                 titulo={`modifica los datos de ${tipo.tipo}`}
-                                handleSubmit={handleUpdate}
+                                handleSubmit={actualizar}
                                 icono={<PencilOutlineIcon />}
                                 color="warning"
                               >
@@ -139,7 +78,7 @@ const TablaDatos = ({
 
                               <ButtonModal
                                 titulo={`Eliminar los datos de ${tipo.tipo}`}
-                                handleSubmit={handleRemove}
+                                handleSubmit={eliminar}
                                 colored
                                 icono={<TrashCanOutlineIcon />}
                                 color="danger"
@@ -162,13 +101,7 @@ const TablaDatos = ({
 
 TablaDatos.propTypes = {
   dir: PropTypes.string.isRequired,
-  tiposProductos: PropTypes.shape({
-    tableHeaderData: PropTypes.arrayOf(PropTypes.shape({
-      key: PropTypes.string,
-      name: PropTypes.string,
-    })),
-    tableRowsData: PropTypes.arrayOf(PropTypes.shape()),
-  }).isRequired,
+  tiposProductos: PropTypes.arrayOf(PropTypes.shape()).isRequired,
   xs: PropTypes.number,
   sm: PropTypes.number,
   md: PropTypes.number,

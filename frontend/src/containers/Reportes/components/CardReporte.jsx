@@ -10,6 +10,10 @@ import PropTypes from 'prop-types';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 
+// Mejor manipulacion de fechas.
+import moment from 'moment';
+import 'moment/locale/es';
+
 // Componentes.
 import Panel from './Panel';
 
@@ -19,13 +23,16 @@ const CardReporte = ({
     datosReporte, productos,
     xs, sm, md, lg, xl,
 }) => {
-    const fecha = new Date(datosReporte.fecha);
+    moment.locale('es');
+    const fecha = moment(datosReporte.fecha);
+    const formatoFecha = 'dddd D MMMM YYYY hh:mm a';
+
     return (
         <Panel
             datosReporte={datosReporte}
             productos={productos}
             title={`Reporte NO° ${datosReporte.id}`}
-            subhead={`Reporte tipo ${datosReporte.tipo} expedido el ${fecha.toLocaleString()}`}
+            subhead={`Reporte tipo ${datosReporte.tipo} expedido el ${fecha.format(formatoFecha)}`}
             xs={xs}
             sm={sm}
             md={md}
