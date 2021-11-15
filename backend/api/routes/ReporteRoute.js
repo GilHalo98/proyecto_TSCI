@@ -11,6 +11,13 @@ module.exports = (app) => {
   // Retorna todos los Reportes registrados
   router.get("/", reporte.getReportes);
 
+  // Cuenta todos los registros de cierto tipo y retorna la cantidad
+  // contada.
+  router.get("/contar/", reporte.onlyCount);
+
+  // Retorna los reportes que se generaron en un año definido.
+  router.get("/porFecha/", reporte.getReportesFecha);
+
   // Elimina un reporte y el tipo de este dado el id del reporte.
   router.delete("/del/:id", reporte.deleteReporte);
 

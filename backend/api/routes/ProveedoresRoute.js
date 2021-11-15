@@ -11,6 +11,10 @@ module.exports = (app) => {
   // Retorna todos los tipos de productos registrados
   router.get("/", proveedor.getProveedor);
 
+  // Cuenta todos los registros de cierto tipo y retorna la cantidad
+  // contada.
+  router.get("/contar/", proveedor.onlyCount);
+
   // Agrega un tipo de producto al registro
   router.post("/add/", proveedor.addProveedor);
 

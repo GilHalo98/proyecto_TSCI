@@ -12,6 +12,7 @@ exports.getTipoProductos = async(request, respuesta) => {
     var offset;
     var limite;
     var totalPaginas;
+    var orden;
 
     if (parametros.busqueda) {
         busqueda = JSON.parse(parametros.busqueda);
@@ -23,6 +24,12 @@ exports.getTipoProductos = async(request, respuesta) => {
         atributos = parametros.atributos;
     } else {
         atributos = Object.keys(TipoProducto.rawAttributes);
+    }
+
+    if (parametros.orden) {
+        orden = JSON.parse(parametros.orden);
+    } else {
+        orden = ['id', 'ASC']
     }
 
     const totalTipos = await TipoProducto.count({
@@ -42,6 +49,7 @@ exports.getTipoProductos = async(request, respuesta) => {
     try {
         const tipos = await TipoProducto.findAll({
             attributes: atributos,
+            order: [orden],
             where: busqueda,
             offset: offset,
             limit: limite,
@@ -59,6 +67,42 @@ exports.getTipoProductos = async(request, respuesta) => {
     }
 };
 
+// Cuenta cuantos registros de tipos de productos de cierto tipo existen en la tabla.
+exports.onlyCount = async(request, respuesta) => {
+    // GET request.
+    const parametros = request.query;
+
+    var busqueda;
+    var atributos;
+
+    if (parametros.busqueda) {
+        busqueda = JSON.parse(parametros.busqueda);
+    } else {
+        busqueda = {};
+    }
+
+    if (parametros.atributos) {
+        atributos = parametros.atributos;
+    } else {
+        atributos = Object.keys(TipoProducto.rawAttributes);
+    }
+
+    try {
+      const totalTipo = await TipoProducto.count({
+          attributes: atributos,
+          where: busqueda,
+      });
+
+      // Se conecto a la db, retorna las Merma.
+      return respuesta.status(200).json({
+          total_tipos: totalTipo
+      });
+
+    } catch(excepcion) {
+      // No se conecto a la db.
+      return respuesta.status(500).send({message: `${excepcion}`});
+    }
+};
 
 // Agrega un nuevo tipo de producto.
 exports.addTipoProducto = async(request, respuesta) => {
@@ -101,7 +145,6 @@ exports.addTipoProducto = async(request, respuesta) => {
     return respuesta.status(500).send({message: `${excepcion}`});
   }
 };
-
 
 // Elimina un tipo de producto de la base de datos.
 exports.deleteTipoProducto = async(request, respuesta) => {
@@ -149,7 +192,6 @@ exports.deleteTipoProducto = async(request, respuesta) => {
     return respuesta.status(500).send({message: `${excepcion}`});
   }
 };
-
 
 // Cambia los datos de un tipo de producto.
 exports.updateTipoProducto = async(request, respuesta) => {

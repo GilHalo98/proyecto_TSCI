@@ -4,7 +4,6 @@ const Proveedor = db.Proveedor;
 const Producto = db.Producto;
 const Reporte = db.Reporte;
 
-
 // Retorna los productos.
 exports.getProducto = async(request, respuesta) => {
     // GET request.
@@ -15,6 +14,7 @@ exports.getProducto = async(request, respuesta) => {
     var offset;
     var limite;
     var totalPaginas;
+    var orden;
 
     if (parametros.busqueda) {
       busqueda = JSON.parse(parametros.busqueda);
@@ -26,6 +26,12 @@ exports.getProducto = async(request, respuesta) => {
         atributos = parametros.atributos;
     } else {
         atributos = Object.keys(Producto.rawAttributes);
+    }
+
+    if (parametros.orden) {
+        orden = JSON.parse(parametros.orden);
+    } else {
+        orden = ['id', 'ASC']
     }
 
     const totalProductos = await Producto.count({
@@ -45,6 +51,7 @@ exports.getProducto = async(request, respuesta) => {
     try {
       const productos = await Producto.findAll({
           attributes: atributos,
+          order: [orden],
           where: busqueda,
           offset: offset,
           limit: limite,
@@ -58,6 +65,43 @@ exports.getProducto = async(request, respuesta) => {
 
     } catch(excepcion) {
 
+      // No se conecto a la db.
+      return respuesta.status(500).send({message: `${excepcion}`});
+    }
+};
+
+// Cuenta cuantos registros de Productos de cierto tipo existen en la tabla.
+exports.onlyCount = async(request, respuesta) => {
+    // GET request.
+    const parametros = request.query;
+
+    var busqueda;
+    var atributos;
+
+    if (parametros.busqueda) {
+        busqueda = JSON.parse(parametros.busqueda);
+    } else {
+        busqueda = {};
+    }
+
+    if (parametros.atributos) {
+        atributos = parametros.atributos;
+    } else {
+        atributos = Object.keys(Producto.rawAttributes);
+    }
+
+    try {
+      const totalProductos = await Producto.count({
+          attributes: atributos,
+          where: busqueda,
+      });
+
+      // Se conecto a la db, retorna las Merma.
+      return respuesta.status(200).json({
+          total_productos: totalProductos
+      });
+
+    } catch(excepcion) {
       // No se conecto a la db.
       return respuesta.status(500).send({message: `${excepcion}`});
     }
@@ -130,7 +174,6 @@ exports.addProducto = async(request, respuesta) => {
   }
 };
 
-
 // Elimina un producto de la base de datos.
 exports.deleteProducto = async(request, respuesta) => {
   // DELETE request.
@@ -177,7 +220,6 @@ exports.deleteProducto = async(request, respuesta) => {
     return respuesta.status(500).send({message: `${excepcion}`});
   }
 };
-
 
 // Cambia los datos de un producto.
 exports.updateProducto = async(request, respuesta) => {

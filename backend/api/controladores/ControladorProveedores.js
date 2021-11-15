@@ -12,6 +12,7 @@ exports.getProveedor = async(request, respuesta) => {
   var offset;
   var limite;
   var totalPaginas;
+  var orden;
 
   if (parametros.busqueda) {
     busqueda = JSON.parse(parametros.busqueda);
@@ -23,6 +24,12 @@ exports.getProveedor = async(request, respuesta) => {
       atributos = parametros.atributos;
   } else {
       atributos = Object.keys(Proveedor.rawAttributes);
+  }
+
+  if (parametros.orden) {
+      orden = JSON.parse(parametros.orden);
+  } else {
+      orden = ['id', 'ASC']
   }
 
   const totalProveedores = await Proveedor.count({
@@ -42,6 +49,7 @@ exports.getProveedor = async(request, respuesta) => {
   try {
     const proveedores = await Proveedor.findAll({
         attributes: atributos,
+        order: [orden],
         where: busqueda,
         offset: offset,
         limit: limite,
@@ -60,6 +68,42 @@ exports.getProveedor = async(request, respuesta) => {
   }
 };
 
+// Cuenta cuantos registros de tipos de productos de cierto tipo existen en la tabla.
+exports.onlyCount = async(request, respuesta) => {
+    // GET request.
+    const parametros = request.query;
+
+    var busqueda;
+    var atributos;
+
+    if (parametros.busqueda) {
+        busqueda = JSON.parse(parametros.busqueda);
+    } else {
+        busqueda = {};
+    }
+
+    if (parametros.atributos) {
+        atributos = parametros.atributos;
+    } else {
+        atributos = Object.keys(Proveedor.rawAttributes);
+    }
+
+    try {
+      const totalProveedores = await Proveedor.count({
+          attributes: atributos,
+          where: busqueda,
+      });
+
+      // Se conecto a la db, retorna las Merma.
+      return respuesta.status(200).json({
+          total_proveedores: totalProveedores
+      });
+
+    } catch(excepcion) {
+      // No se conecto a la db.
+      return respuesta.status(500).send({message: `${excepcion}`});
+    }
+};
 
 // Agrega un nuevo tipo de producto.
 exports.addProveedor = async(request, respuesta) => {
@@ -112,7 +156,6 @@ exports.addProveedor = async(request, respuesta) => {
   }
 };
 
-
 // Elimina un tipo de producto de la base de datos.
 exports.deleteProveedor = async(request, respuesta) => {
   // DELETE request.
@@ -159,7 +202,6 @@ exports.deleteProveedor = async(request, respuesta) => {
     return respuesta.status(500).send({message: `${excepcion}`});
   }
 };
-
 
 // Cambia los datos de un tipo de producto.
 exports.updateProveedor = async(request, respuesta) => {

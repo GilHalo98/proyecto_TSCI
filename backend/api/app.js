@@ -22,6 +22,7 @@ require("./routes/TipoProductoRoute")(app);
 require("./routes/ProveedoresRoute")(app);
 require("./routes/ProductoRoute")(app);
 require("./routes/ReporteRoute")(app);
+require("./routes/UsuarioRoute")(app);
 
 // Respuesta del servidor.
 app.listen(PORT, (error) => {

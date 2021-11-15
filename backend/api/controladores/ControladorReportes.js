@@ -1,8 +1,10 @@
+// Modelos de la db.
 const db = require("../models/index");
 const Reporte = db.Reporte;
 const Producto = db.Producto;
-const Sequelize = require('sequelize');
-const Op = Sequelize.Op;
+
+// Operadores.
+const { Op } = require("sequelize");
 
 // Retorna todos los reportes registrados.
 exports.getReportes = async(request, respuesta) => {
@@ -14,6 +16,7 @@ exports.getReportes = async(request, respuesta) => {
   var offset;
   var limite;
   var totalPaginas;
+  var orden;
 
   if (parametros.busqueda) {
       busqueda = JSON.parse(parametros.busqueda);
@@ -25,6 +28,12 @@ exports.getReportes = async(request, respuesta) => {
       atributos = parametros.atributos;
   } else {
       atributos = Object.keys(Reporte.rawAttributes);
+  }
+
+  if (parametros.orden) {
+      orden = JSON.parse(parametros.orden);
+  } else {
+      orden = ['id', 'ASC']
   }
 
   const totalReportes = await Reporte.count({
@@ -44,7 +53,7 @@ exports.getReportes = async(request, respuesta) => {
   try {
     const reporte = await Reporte.findAll({
         attributes: atributos,
-        order: [['fecha', 'DESC']],
+        order: [orden],
         where: busqueda,
         offset: offset,
         limit: limite,
@@ -60,6 +69,108 @@ exports.getReportes = async(request, respuesta) => {
     // No se conecto a la db.
     return respuesta.status(500).send({message: `${excepcion}`});
   }
+};
+
+// Cuenta cuantos registros de Reportes de cierto tipo existen en la tabla.
+exports.onlyCount = async(request, respuesta) => {
+    // GET request.
+    const parametros = request.query;
+
+    var busqueda;
+    var atributos;
+
+    if (parametros.busqueda) {
+        busqueda = JSON.parse(parametros.busqueda);
+    } else {
+        busqueda = {};
+    }
+
+    if (parametros.atributos) {
+        atributos = parametros.atributos;
+    } else {
+        atributos = Object.keys(Reporte.rawAttributes);
+    }
+
+    try {
+      const totalReportes = await Reporte.count({
+          attributes: atributos,
+          where: busqueda,
+      });
+
+      // Se conecto a la db, retorna las Merma.
+      return respuesta.status(200).json({
+          total_reportes: totalReportes
+      });
+
+    } catch(excepcion) {
+      // No se conecto a la db.
+      return respuesta.status(500).send({message: `${excepcion}`});
+    }
+};
+
+// Retorna los reportes generados durante un año dado
+exports.getReportesFecha = async(request, respuesta) => {
+    // GET request.
+    const parametros = request.query;
+
+    var busqueda;
+
+    const f1 = new Date();
+    const f2 = new Date();
+
+    f1.setTime(0);
+    f1.setFullYear(parametros.fecha);
+    f1.setMonth(0);
+    f1.setDate(1);
+    f1.setHours(-6);
+    f1.setMinutes(0);
+    f1.setSeconds(0);
+    f1.setMilliseconds(0);
+
+    f2.setTime(0);
+    f2.setFullYear(parametros.fecha);
+    f2.setDate(31);
+    f2.setMonth(11);
+    f2.setHours(17);
+    f2.setMinutes(59);
+    f2.setSeconds(59);
+    f2.setMilliseconds(999);
+
+    if (parametros.tipo) {
+        busqueda = {
+            tipo: parametros.tipo,
+            fecha: {
+                [Op.between]: [
+                    f1.toISOString(),
+                    f2.toISOString()
+                ],
+            }
+        };
+    } else {
+        busqueda = {
+            fecha: {
+                [Op.between]: [
+                    f1.toISOString(),
+                    f2.toISOString()
+                ],
+            }
+        };
+    }
+
+    try {
+      const reporte = await Reporte.findAll({
+          where: busqueda,
+      });
+
+      // Se conecto a la db, retorna las Merma.
+      return respuesta.status(200).json({
+          datos: reporte
+      });
+
+    } catch(excepcion) {
+      // No se conecto a la db.
+      return respuesta.status(500).send({message: `${excepcion}`});
+    }
 };
 
 // Elimina un reporte dado un id.
@@ -102,7 +213,7 @@ exports.addReporte = async(request, respuesta) => {
   const datos = request.body;
 
   // Fecha actual.
-  const fecha = (new Date()).toLocaleString("en-US");
+  const fecha = (new Date()).toISOString();
 
   // Verificar si la informacion esta completa.
   if(
