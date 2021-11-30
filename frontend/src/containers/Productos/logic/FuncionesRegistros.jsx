@@ -9,20 +9,21 @@ const apiRequest = axios.create({
 });
 
 const registrar = (event) => {
-    const data = {
-      numero_serie: event.target[1].value,
-      costo: event.target[2].value,
-      medidas: event.target[3].value,
-      cantidad_stock: event.target[4].value,
-      id_proveedor: event.target[5].value,
-      id_tipo: event.target[6].value,
-    };
+    const data = new FormData();
+
+    data.append('numero_serie', event.target[1].value);
+    data.append('costo', event.target[2].value);
+    data.append('medidas', event.target[3].value);
+    data.append('cantidad_stock', event.target[4].value);
+    data.append('id_proveedor', event.target[5].value);
+    data.append('id_tipo', event.target[6].value);
+    data.append('file', event.target[7].files[0]);
 
     event.preventDefault();
 
     apiRequest.post(
       `/producto/add/`,
-      data
+      data,
     ).then((respuesta) => {
       Swal.fire({
         title: "Producto Agregado!",
@@ -44,14 +45,14 @@ const registrar = (event) => {
 };
 
 const actualizar = (event) => {
-    const data = {
-      numero_serie: event.target[1].value,
-      costo: event.target[2].value,
-      medidas: event.target[3].value,
-      cantidad_stock: event.target[4].value,
-      id_proveedor: event.target[5].value,
-      id_tipo: event.target[6].value,
-    };
+    const data = new FormData();
+    data.append('numero_serie', event.target[1].value);
+    data.append('costo', event.target[2].value);
+    data.append('medidas', event.target[3].value);
+    data.append('cantidad_stock', event.target[4].value);
+    data.append('id_proveedor', event.target[5].value);
+    data.append('id_tipo', event.target[6].value);
+    data.append('file', event.target[7].files[0]);
 
     event.preventDefault();
 

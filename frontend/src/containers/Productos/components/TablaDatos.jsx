@@ -11,6 +11,7 @@ import {
 // Iconos.
 import TrashCanOutlineIcon from 'mdi-react/TrashCanOutlineIcon';
 import PencilOutlineIcon from 'mdi-react/PencilOutlineIcon';
+import ImageSizeSelectActualIcon from 'mdi-react/ImageSizeSelectActualIcon';
 
 // Parametros del componente.
 import PropTypes from 'prop-types';
@@ -18,6 +19,7 @@ import PropTypes from 'prop-types';
 // Componentes.
 import HeaderCard from './HeaderCard';
 import ButtonModal from './ButtonModal';
+import ButtonModalImagen from './ButtonModalImagen';
 import FormProducto from './FormProducto';
 import FormDeleteProducto from './FormDeleteProducto';
 
@@ -107,6 +109,14 @@ const TablaDatos = ({
                               >
                                 <FormDeleteProducto idProducto={producto.id} />
                               </ButtonModal>
+
+                              <ButtonModalImagen
+                                titulo={`Imagen de ${producto.numero_serie}`}
+                                id_imagen={producto.id_imagen}
+                                handleSubmit={eliminar}
+                                icono={<ImageSizeSelectActualIcon />}
+                                color="success"
+                              />
                             </ButtonGroup>
                         </ButtonToolbar>
                     </td>

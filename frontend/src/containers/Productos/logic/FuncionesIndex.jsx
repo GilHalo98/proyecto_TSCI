@@ -4,7 +4,7 @@ import Swal from "sweetalert2";
 
 const querry = async (
     paginaProductos, limiteProductos,
-    setListaProductos, setTotalPaginas, setListaProveedores, setListaTiposProductos
+    setListaProductos, setTotalPaginas, setListaProveedores, setListaTiposProductos,
 ) => {
   const productosResult = await axios({
     method: 'get',

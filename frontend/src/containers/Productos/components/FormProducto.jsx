@@ -13,6 +13,7 @@ import MenuItem from '@material-ui/core/MenuItem';
 
 // Componente de field.
 import ComponenteField from './ComponenteField';
+import RenderDropZone from '../../../shared/components/form/DropZone';
 
 // Nose.
 // import { useTranslation } from 'react-i18next';
@@ -27,77 +28,86 @@ const FormProducto = ({
     defaultTipo,
     proveedores,
     tiposProductos,
-}) => (
-    <Col>
-        <Field
-          name="id"
-          defaultValue={idProducto}
-          component={ComponenteField}
-          label=""
-          type="hidden"
-        />
+}) => {
+    return (
+        <Col>
+            <Field
+              name="id"
+              defaultValue={idProducto}
+              component={ComponenteField}
+              label=""
+              type="hidden"
+            />
 
-        <Field
-          name="numero_serie"
-          defaultValue={defaultNumero}
-          component={ComponenteField}
-          label="Numero de serie"
-        />
+            <Field
+              name="numero_serie"
+              defaultValue={defaultNumero}
+              component={ComponenteField}
+              label="Numero de serie"
+            />
 
-        <Field
-          name="costo"
-          defaultValue={defaultCosto}
-          component={ComponenteField}
-          label="Costo"
-        />
+            <Field
+              name="costo"
+              defaultValue={defaultCosto}
+              component={ComponenteField}
+              label="Costo"
+            />
 
-        <Field
-          name="medidas"
-          defaultValue={defaultMedidas}
-          component={ComponenteField}
-          label="Medidas"
-        />
+            <Field
+              name="medidas"
+              defaultValue={defaultMedidas}
+              component={ComponenteField}
+              label="Medidas"
+            />
 
-        <Field
-          name="cantidad_stock"
-          defaultValue={defaultCantidad}
-          component={ComponenteField}
-          label="Cantidad en stock"
-        />
+            <Field
+              name="cantidad_stock"
+              defaultValue={defaultCantidad}
+              component={ComponenteField}
+              label="Cantidad en stock"
+            />
 
-        <Field
-          name="id_proveedor"
-          defaultValue={defaultProveedor}
-          component={ComponenteField}
-          select
-          label="Proveedor"
-        >
-          {proveedores.map((proveedor) => {
-            return(
-              <MenuItem className="material-form__option" value={proveedor.id}>
-                {proveedor.nombre}
-              </MenuItem>
-            );
-          })}
-        </Field>
+            <Field
+              name="id_proveedor"
+              defaultValue={defaultProveedor}
+              component={ComponenteField}
+              select
+              label="Proveedor"
+            >
+              {proveedores.map((proveedor) => {
+                return(
+                  <MenuItem className="material-form__option" value={proveedor.id}>
+                    {proveedor.nombre}
+                  </MenuItem>
+                );
+              })}
+            </Field>
 
-        <Field
-          name="id_tipo"
-          defaultValue={defaultTipo}
-          component={ComponenteField}
-          select
-          label="Tipo de producto"
-        >
-          {tiposProductos.map((tipo) => {
-            return(
-              <MenuItem className="material-form__option" value={tipo.id}>
-                {tipo.tipo}
-              </MenuItem>
-            );
-          })}
-        </Field>
-    </Col>
-);
+            <Field
+              name="id_tipo"
+              defaultValue={defaultTipo}
+              component={ComponenteField}
+              select
+              label="Tipo de producto"
+            >
+              {tiposProductos.map((tipo) => {
+                return(
+                  <MenuItem className="material-form__option" value={tipo.id}>
+                    {tipo.tipo}
+                  </MenuItem>
+                );
+              })}
+            </Field>
+
+            <Field
+                name="imagen"
+                component={RenderDropZone}
+                type="file"
+                label="Imagen de Reto"
+            />
+        </Col>
+    );
+};
 
 FormProducto.propTypes = {
     idProducto: PropTypes.number,
