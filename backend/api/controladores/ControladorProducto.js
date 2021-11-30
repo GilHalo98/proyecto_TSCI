@@ -3,6 +3,14 @@ const TipoProducto = db.Tipo_Producto;
 const Proveedor = db.Proveedor;
 const Producto = db.Producto;
 const Reporte = db.Reporte;
+const Imagen = db.Imagen;
+
+// Manipulacion de ficheros y directorios.
+const fs = require("fs");
+
+// Importa el ambiente en el que se trabaja.
+require("dotenv").config();
+const DIR = process.env.BASE_DIR;
 
 // Retorna los productos.
 exports.getProducto = async(request, respuesta) => {
@@ -155,19 +163,35 @@ exports.addProducto = async(request, respuesta) => {
   }
 
   try {
-    const producto = {
-      numero_serie: datos.numero_serie,
-      costo: datos.costo,
-      medidas: datos.medidas,
-      cantidad_stock: datos.cantidad_stock,
-      id_tipo: datos.id_tipo,
-      id_proveedor: datos.id_proveedor,
+    const imagen = {
+        tipo: request.file.mimetype,
+        nombre: request.file.originalname,
+        data: fs.readFileSync(
+            DIR + "recursos/uploads/" + request.file.filename
+        ),
     };
 
-    Producto.create(producto).then((resultado) => {
-      respuesta.status(201).json({
-        message: "El producto se agrego exitosamente!",
-      });
+    Imagen.create(imagen).then((resultado) => {
+        fs.writeFileSync(
+            DIR + "recursos/temp/" + imagen.name,
+            imagen.data
+        );
+
+        const producto = {
+          numero_serie: datos.numero_serie,
+          costo: datos.costo,
+          medidas: datos.medidas,
+          cantidad_stock: datos.cantidad_stock,
+          id_tipo: datos.id_tipo,
+          id_proveedor: datos.id_proveedor,
+          id_imagen: resultado.id
+        };
+
+        Producto.create(producto).then((resultado) => {
+          respuesta.status(201).json({
+            message: "El producto se agrego exitosamente!",
+          });
+        });
     });
   } catch(excepcion) {
     return respuesta.status(500).send({message: `${excepcion}`});
@@ -247,15 +271,19 @@ exports.updateProducto = async(request, respuesta) => {
   if(datos.numero_serie) {
     producto.numero_serie = datos.numero_serie;
   }
+
   if(datos.costo) {
     producto.costo = datos.costo;
   }
+
   if(datos.medidas) {
     producto.medidas = datos.medidas;
   }
+
   if(datos.cantidad_stock) {
     producto.cantidad_stock = datos.cantidad_stock;
   }
+
   if(datos.id_tipo) {
     // Verifica si el tipo de registro es valido.
     const tipo_producto = await TipoProducto.findOne({
@@ -296,6 +324,29 @@ exports.updateProducto = async(request, respuesta) => {
 
   // Si existe se actualiza su informacion.
   try {
+    // Si hay un cambio de la imagen vinculada.
+    if(request.file) {
+        const imagen = await Imagen.findOne({
+          where: {
+            id: producto.id_imagen,
+          },
+        });
+
+        imagen.tipo = request.file.mimetype;
+        imagen.nombre = request.file.originalname;
+        imagen.data = fs.readFileSync(
+            DIR + "recursos/uploads/" + request.file.filename
+        );
+
+        imagen.save().then(() => {
+            fs.writeFileSync(
+                DIR + "recursos/temp/" + imagen.name,
+                imagen.data
+            );
+        });
+
+    }
+
     // Guarda los cambios.
     producto.save();
 
