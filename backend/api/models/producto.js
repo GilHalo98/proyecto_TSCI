@@ -13,6 +13,7 @@ module.exports = (sequelize, DataTypes) => {
       // define association here
       Producto.belongsTo(models.Proveedor, {foreignKey: "id_proveedor"});
       Producto.belongsTo(models.Tipo_Producto, {foreignKey: "id_tipo"});
+      Producto.belongsTo(models.Imagen, {foreignKey: "id_imagen"});
     }
   };
   Producto.init({
@@ -23,7 +24,8 @@ module.exports = (sequelize, DataTypes) => {
 
     // FK
     id_tipo: DataTypes.INTEGER,
-    id_proveedor: DataTypes.INTEGER
+    id_proveedor: DataTypes.INTEGER,
+    id_imagen: DataTypes.INTEGER
   }, {
     sequelize,
     modelName: 'Producto',
