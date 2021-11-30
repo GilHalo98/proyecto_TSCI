@@ -46,6 +46,17 @@ module.exports = {
           key: "id",
         },
       },
+      id_imagen: {
+        type: Sequelize.INTEGER,
+        required: true,
+        allowNull: false,
+        references: {
+          model: {
+            tableName: "Imagenes",
+          },
+          key: "id",
+        },
+      },
     });
   },
   down: async (queryInterface, Sequelize) => {
