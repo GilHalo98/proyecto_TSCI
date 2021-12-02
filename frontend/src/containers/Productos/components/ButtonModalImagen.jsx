@@ -40,7 +40,7 @@ const ButtonModalImagen = ({
         setImagen,
     );
 
-  }, []);
+}, [id_imagen]);
 
   return (
     <>
@@ -70,7 +70,7 @@ const ButtonModalImagen = ({
         </div>
 
         <img
-          alt="image"
+          alt={imagen.nombre}
           src={`data:${imagen.tipo};base64,${imagen.imagenB64}`}
         />
 

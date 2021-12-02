@@ -1,7 +1,7 @@
 import React from "react";
 
 // Componentes react-bootstrap.
-import { Col, Button } from 'reactstrap';
+import { Button } from 'reactstrap';
 
 // Componentes de reduxForm.
 import { Field, reduxForm } from 'redux-form';
@@ -15,7 +15,6 @@ const LogInForm = () => {
   // Valores del form.
   const [username, setUserName] = React.useState();
   const [password, setPassword] = React.useState();
-  const [passwordConfirmacion, setPasswordConfirmacion] = React.useState();
 
   return (
       <form className="material-form">

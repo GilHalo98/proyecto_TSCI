@@ -9,12 +9,6 @@ import {
   Col, Container, Row,
 } from 'reactstrap';
 
-// Para realizar llamadas a la API
-import axios from "axios";
-
-// Colores aleatorios.
-import randomColor from "randomcolor";
-
 // Conexion con react-redux
 import { connect } from 'react-redux';
 

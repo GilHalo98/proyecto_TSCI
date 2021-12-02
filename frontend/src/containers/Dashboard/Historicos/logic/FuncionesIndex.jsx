@@ -1,12 +1,6 @@
 // Para realizar llamadas a la API
 import axios from "axios";
 
-// Para mostrar alertas.
-import Swal from "sweetalert2";
-
-// Colores aleatorios.
-import randomColor from "randomcolor";
-
 // Mejor manipulacion de fechas.
 import moment from 'moment';
 import 'moment/locale/es';
@@ -47,9 +41,10 @@ const querry = async (
             tipo: 'merma'
         },
     });
-    conteo = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    for (var reporte of reportesResultMerma.data.datos) {
-        fechaReporte = moment(reporte.fecha);
+    conteo = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    for (var reporteMerma of reportesResultMerma.data.datos) {
+        fechaReporte = moment(reporteMerma.fecha);
         conteo[fechaReporte.month()] += 1;
     }
     setConteoReportesMerma(conteo);
@@ -62,9 +57,11 @@ const querry = async (
             tipo: 'salida'
         },
     });
-    conteo = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    for (var reporte of reportesResultSalida.data.datos) {
-        fechaReporte = moment(reporte.fecha);
+
+    conteo = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    for (var reporteSalida of reportesResultSalida.data.datos) {
+        fechaReporte = moment(reporteSalida.fecha);
         conteo[fechaReporte.month()] += 1;
     }
     setConteoReportesSalida(conteo);
@@ -77,9 +74,11 @@ const querry = async (
             tipo: 'entrada'
         },
     });
-    conteo = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
-    for (var reporte of reportesResultEntrada.data.datos) {
-        fechaReporte = moment(reporte.fecha);
+
+    conteo = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
+
+    for (var reporteEntrada of reportesResultEntrada.data.datos) {
+        fechaReporte = moment(reporteEntrada.fecha);
         conteo[fechaReporte.month()] += 1;
     }
     setConteoReportesEntrada(conteo);

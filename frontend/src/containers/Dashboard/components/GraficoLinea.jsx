@@ -1,5 +1,4 @@
-import React, { useEffect, useState } from 'react';
-// import { useTranslation } from 'react-i18next';
+import React from 'react';
 
 // Parametros del componente.
 import PropTypes from 'prop-types';

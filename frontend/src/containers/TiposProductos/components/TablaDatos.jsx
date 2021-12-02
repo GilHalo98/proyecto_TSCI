@@ -15,10 +15,6 @@ import PencilOutlineIcon from 'mdi-react/PencilOutlineIcon';
 // Parametros del componente.
 import PropTypes from 'prop-types';
 
-// Para realizar llamadas a la API
-import axios from "axios";
-import Swal from "sweetalert2";
-
 // Componentes.
 import HeaderCard from './HeaderCard';
 

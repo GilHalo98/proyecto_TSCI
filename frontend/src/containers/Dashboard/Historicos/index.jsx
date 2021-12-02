@@ -9,12 +9,6 @@ import {
   Col, Container, Row,
 } from 'reactstrap';
 
-// Para realizar llamadas a la API
-import axios from "axios";
-
-// Colores aleatorios.
-// import randomColor from "randomcolor";
-
 // Mejor manipulacion de fechas.
 import moment from 'moment';
 import 'moment/locale/es';
@@ -40,7 +34,6 @@ const Historicos = ({ rtl }) => {
     const [conteoReportes, setConteoReportes] = React.useState(
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     );
-
     const [conteoReportesMerma, setConteoReportesMerma] = React.useState(
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     );
@@ -50,7 +43,6 @@ const Historicos = ({ rtl }) => {
     const [conteoReportesEntrada, setConteoReportesEntrada] = React.useState(
         [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
     );
-
     const [dataSetTipoReporte, setDataSetTipoReporte] = React.useState();
 
     React.useEffect(() => {

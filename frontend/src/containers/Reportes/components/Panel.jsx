@@ -4,10 +4,6 @@ import React, { useState } from 'react';
 // Tipo de datos.
 import PropTypes from 'prop-types';
 
-// Para llamadas a la API
-import axios from "axios";
-import Swal from "sweetalert2";
-
 // Componentes de bootstrap.
 import {
   Badge, Card, CardBody, Col, Collapse,

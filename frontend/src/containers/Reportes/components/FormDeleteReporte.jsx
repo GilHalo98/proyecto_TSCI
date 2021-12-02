@@ -11,7 +11,6 @@ import {
 
 // Componentes de reduxForm.
 import { Field, reduxForm } from 'redux-form';
-import MenuItem from '@material-ui/core/MenuItem';
 
 // Componente de field.
 import ComponenteField from './ComponenteField';

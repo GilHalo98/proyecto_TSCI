@@ -1,9 +1,6 @@
 // Para realizar llamadas a la API
 import axios from "axios";
 
-// Para mostrar alertas.
-import Swal from "sweetalert2";
-
 // Colores aleatorios.
 import randomColor from "randomcolor";
 

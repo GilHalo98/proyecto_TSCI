@@ -1,6 +1,6 @@
 // Modulos de React.
 import React from 'react';
-import axios from "axios";
+
 // Parametros del componente.
 import PropTypes from 'prop-types';
 

@@ -4,10 +4,6 @@ import React from 'react';
 // Parametros del componente.
 import PropTypes from 'prop-types';
 
-// Para realizar llamadas a la API
-import axios from "axios";
-import Swal from "sweetalert2";
-
 // Componentes de reactstrap.
 import {
     Container, Col, Row,
