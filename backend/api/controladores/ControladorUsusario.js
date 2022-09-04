@@ -82,7 +82,8 @@ exports.login = async(request, respuesta) => {
       // Si la contrasenia pasada concuerda con la almacenada.
       if(igual){
         // Genera el token.
-        const token = jwt.sign({
+        const token = jwt.sign(
+          {
             id: usuario.id,
             username: usuario.username,
           },
